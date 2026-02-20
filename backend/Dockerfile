@@ -1,6 +1,6 @@
 # ---- Stage 1: Builder ----
-# Use a full Python image to compile dlib and native libs
-FROM python:3.10-slim AS builder
+# Use bullseye (Debian 11) for stable package names
+FROM python:3.10-bullseye AS builder
 
 # Install system build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libopenblas-dev \
     liblapack-dev \
     libx11-dev \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxrender1 \
@@ -25,13 +25,13 @@ RUN pip install --upgrade pip && \
     pip install --prefix=/install/deps --no-cache-dir -r requirements.txt
 
 # ---- Stage 2: Runtime ----
-FROM python:3.10-slim
+FROM python:3.10-bullseye
 
 # Install only runtime system libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libopenblas0 \
     liblapack3 \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxrender1 \
