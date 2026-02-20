@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+*.jpg
+*.jpeg
+*.png
+temp_*.jpg
+temp_*.jpeg
+.git
+.gitignore
+README.md
+*.md

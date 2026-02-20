@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+sqlalchemy
+psycopg2-binary
+supabase
+python-dotenv
+opencv-python
+numpy
+mediapipe
+requests
+websockets
+face-recognition
+dlib
+cmake
