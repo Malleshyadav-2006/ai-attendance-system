@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { getStudentProfile, getStudentAttendance } from '@/utils/studentApi';
 import { markAttendance } from '@/utils/api';
 import { Camera, X } from 'lucide-react';
 
-export default function StudentDashboard() {
+function StudentDashboardContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const userId = searchParams.get('id');
@@ -158,9 +158,6 @@ export default function StudentDashboard() {
                 {/* Header / Profile Card */}
                 <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row items-center md:items-start gap-8 relative overflow-hidden">
                     <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-indigo-100 shadow-sm flex-shrink-0 z-10">
-                        {/* Placeholder for now if no photo url in profile, or use first attendance photo? */}
-                        {/* We don't store profile photo URL in users yet, but we have face_encoding. 
-                             Let's use a generic avatar or initials. */}
                         <div className="w-full h-full bg-indigo-600 flex items-center justify-center text-4xl text-white font-bold">
                             {profile?.name?.charAt(0).toUpperCase()}
                         </div>
@@ -308,5 +305,17 @@ export default function StudentDashboard() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function StudentDashboard() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        }>
+            <StudentDashboardContent />
+        </Suspense>
     );
 }
