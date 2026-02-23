@@ -1,6 +1,5 @@
 # ---- Stage 1: Builder ----
-# Use bullseye (Debian 11) for stable package names
-FROM python:3.10-bullseye AS builder
+FROM python:3.10-slim-bullseye AS builder
 
 # Install system build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -19,9 +18,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /install
 
-# Copy requirements and install Python packages
-COPY requirements.txt .
+# Install dlib first as it takes the longest
 RUN pip install --upgrade pip && \
+    pip install --prefix=/install/deps --no-cache-dir dlib==19.24.1
+
+# Copy requirements and install remaining Python packages
+COPY requirements.txt .
+# Remove dlib from requirements if it exists there to avoid re-installing
+RUN sed -i '/dlib/d' requirements.txt && \
     pip install --prefix=/install/deps --no-cache-dir -r requirements.txt
 
 # ---- Stage 2: Runtime ----
